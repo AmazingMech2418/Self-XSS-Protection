@@ -5,6 +5,8 @@ window.addEventListener("load", () => {
          * Paths should be objects with a domain and path
          */
     ];
+    
+    const previouslyAllowed = []; // Starts as empty since nothing has been allowed
 
     function comparePaths(_a, _b) {
         let a = _a.split("#")[0].split("?")[0];
@@ -54,9 +56,9 @@ window.addEventListener("load", () => {
             return callback(a, b, c, this);
         };
 
-        XMLHttpRequest.prototype.open = function (a, b) {
-            if (!a) var a = '';
-            if (!b) var b = '';
+        XMLHttpRequest.prototype.open = function (_a, _b) {
+            let a = _a || '';
+            let b = _b || '';
             xmlHttpRequestListener.tempOpen.apply(this, arguments);
             xmlHttpRequestListener.method = a;
             xmlHttpRequestListener.url = b;
@@ -66,13 +68,12 @@ window.addEventListener("load", () => {
             }
         }
 
-        XMLHttpRequest.prototype.send = function (a, b) {
-            let result =
-                xmlHttpRequestListener.callback(a, b, false);
+        XMLHttpRequest.prototype.send = function (_a, _b) {
+            let a = _a || '';
+            let b = _b || '';
+            let result = xmlHttpRequestListener.callback(a, b, false);
             if (result == "DROP_REQUEST") return;
-            console.log(result);
-            if (!a) var a = '';
-            if (!b) var b = '';
+            
             xmlHttpRequestListener.tempSend.apply(this, arguments);
             if (xmlHttpRequestListener.method.toLowerCase() == 'post') xmlHttpRequestListener.data = a;
         }
@@ -114,7 +115,7 @@ window.addEventListener("load", () => {
         const domain = urlReader.hostname;
         const path = urlReader.pathname;
 
-        let allowed = parseURL();
+        let allowed = parseURL().concat(previouslyAllowed);
         for (let i of allowed) {
             if (i.domain == domain && comparePaths(i.path, path)) {
                 if (!("method" in i) || i.method == method)
@@ -122,8 +123,12 @@ window.addEventListener("load", () => {
             }
         }
 
+        
+        const confirmed = confirm(`Request to ${requestURL} of method ${method}`);
+        
+        if(confirmed) previouslyAllowed.push({domain, path, method});
 
-        return confirm(`Request to ${requestURL}`) ? "" : "DROP_REQUEST";
+        return confirmed ? "" : "DROP_REQUEST";
     }
 
     overrideRequests(confirmPath);
