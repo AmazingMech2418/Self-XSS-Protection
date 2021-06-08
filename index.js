@@ -1,4 +1,9 @@
 window.addEventListener("load", () => {
+    Object.freeze(Array.prototype);
+    Object.freeze(Object.prototype);
+    Object.freeze(String.prototype);
+    Object.freeze(Function.prototype);
+    
     const confirm = window.confirm;
     
     const universalPaths = [
@@ -7,6 +12,8 @@ window.addEventListener("load", () => {
          * Paths should be objects with a domain and path
          */
     ];
+    
+    Object.freeze(universalPaths);
     
     const previouslyAllowed = []; // Starts as empty since nothing has been allowed
 
@@ -79,6 +86,9 @@ window.addEventListener("load", () => {
             xmlHttpRequestListener.tempSend.apply(this, arguments);
             if (xmlHttpRequestListener.method.toLowerCase() == 'post') xmlHttpRequestListener.data = a;
         }
+        
+        Object.freeze(XMLHttpRequest.prototype);
+        Object.freeze(xmlHttpRequestListener);
 
         let oldFetch = fetch;
         fetch = async (url, options) => {
