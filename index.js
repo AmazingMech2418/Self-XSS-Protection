@@ -1,4 +1,6 @@
 window.addEventListener("load", () => {
+    const confirm = window.confirm;
+    
     const universalPaths = [
         /**
          * Add here any universally allowed paths you need for your website.
