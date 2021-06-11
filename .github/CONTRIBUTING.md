@@ -9,6 +9,8 @@ If you would like to suggest a feature, please create an issue in this repositor
 ## Pull Requests
 If you would like to fix a bug or implement a suggestion, it is best that you work to fix those with highest priority. Labels will be added to issues labelling a priority from 1 through 5.
 
+*Please note that the greater the number, the greater priority.*
+
 Here is a breakdown of these priority levels:
 - 1: Feature request - Should be implemented but not critical to add
 - 2: Improvement suggestion - Suggestion to improve the security of the XSS protection system, but not linked to a clear vulnerability
